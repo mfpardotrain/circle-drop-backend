@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import FarmBoy, FarmVegetable, VegetableOrder, Order, Market, Farm, Payment
+from .models import Quarreler, Game
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class MainTableSerializer(serializers.ModelSerializer):
+class GameSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MainTable
+        model = Game
         fields = '__all__'

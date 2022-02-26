@@ -15,7 +15,7 @@ urlpatterns = [
 
     # Game URLs
     path('chooseWord/', views.choose_word),
-    path('getWord/', views.choose_word),
+    path('getWords/', views.choose_word),
     path('normalGame/', views.normal_game),
     path('rankedGame/', views.ranked_game),
 ]

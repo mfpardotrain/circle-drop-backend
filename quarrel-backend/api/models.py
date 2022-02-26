@@ -47,9 +47,9 @@ class Quarreler(AbstractBaseUser):
         return str(self.email)
 
 
-class MainTable(models.Model):
-    primary_user = models.ForeignKey(Quarreler, related_name='primary_user', on_delete=models.Cascade)
-    secondary_user = models.ForeignKey(Quarreler, related_name='secondary_user', on_delete=models.Cascade)
+class Game(models.Model):
+    primary_user = models.ForeignKey(Quarreler, related_name='primary_user', on_delete=models.CASCADE)
+    secondary_user = models.ForeignKey(Quarreler, related_name='secondary_user', on_delete=models.CASCADE)
     answer = models.CharField(max_length=30)
     guess1 = models.CharField(max_length=30)
     guess2 = models.CharField(max_length=30)
@@ -57,8 +57,8 @@ class MainTable(models.Model):
     guess4 = models.CharField(max_length=30)
     guess5 = models.CharField(max_length=30)
     guess6 = models.CharField(max_length=30)
-    time = models.DateTimeField(auto_now=False)
-    correct_position = models.PositiveIntegerField()
+    solution_time = models.DateTimeField(auto_now=False)
+    correct_guess = models.PositiveIntegerField()
     primary_elo = models.DecimalField(max_digits=8, decimal_places=2)
     secondary_elo = models.DecimalField(max_digits=8, decimal_places=2)
     elo_change = models.DecimalField(max_digits=8, decimal_places=2)

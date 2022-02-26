@@ -12,6 +12,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 import json
 import logging
+import random
+import uuid
 from rest_framework.response import Response
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -82,8 +84,6 @@ def user_store(request):
         return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
 
 
-
-
 class CustomAuthToken(ObtainAuthToken):
 
     def post(self, request, *args, **kwargs):
@@ -101,3 +101,75 @@ class CustomAuthToken(ObtainAuthToken):
 def ping(request):
     if request.method == 'GET':
         return JsonResponse(status=200, data={'message': 'pong'})
+
+
+@csrf_exempt
+def choose_word(request):
+    obj = False
+    if request.method == 'GET':
+        words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+        choices = random.choices(words, k=15)
+        #serializer = GameSerializer(words, many=True)
+        return JsonResponse(data={"status": 200, "data": choices}, safe=False)
+
+    elif request.method == 'POST':
+        serializer = GameSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
+        return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
+
+    elif request.method == 'DELETE':
+        obj = model_object.objects.get(order=data['id'])
+        logger.info(obj)
+        obj.delete()
+        serializer = GameSerializer(obj)
+        return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
+
+
+@csrf_exempt
+def normal_game(request):
+    obj = False
+    if request.method == 'GET':
+        serializer = GameSerializer(obj, many=True)
+        return JsonResponse(data={"status": 200, "data": serializer.data}, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+
+
+
+        serializer = GameSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            # serializer.save()
+            return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
+        return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
+
+    elif request.method == 'DELETE':
+        obj = model_object.objects.get(order=data['id'])
+        logger.info(obj)
+        obj.delete()
+        serializer = GameSerializer(obj)
+        return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
+
+
+@csrf_exempt
+def ranked_game(request):
+    obj = False
+    if request.method == 'GET':
+        serializer = GameSerializer(obj, many=True)
+        return JsonResponse(data={"status": 200, "data": serializer.data}, safe=False)
+
+    elif request.method == 'POST':
+        serializer = GameSerializer(data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
+        return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
+
+    elif request.method == 'DELETE':
+        obj = model_object.objects.get(order=data['id'])
+        logger.info(obj)
+        obj.delete()
+        serializer = GameSerializer(obj)
+        return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
