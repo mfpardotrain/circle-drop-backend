@@ -1,6 +1,3 @@
-from smtplib import SMTPException, SMTPDataError
-
-from django.db import IntegrityError
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
@@ -8,19 +5,15 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.utils import json
-import requests
-from requests.auth import HTTPBasicAuth
 import json
 import logging
 import random
-import uuid
+import threading
+from .Websocket import *
 from rest_framework.response import Response
-
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from .serializers import *
 from .models import *
-
 
 logger = logging.getLogger(__name__)
 
@@ -109,7 +102,7 @@ def choose_word(request):
     if request.method == 'GET':
         words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
         choices = random.choices(words, k=15)
-        #serializer = GameSerializer(words, many=True)
+        # serializer = GameSerializer(words, many=True)
         return JsonResponse(data={"status": 200, "data": choices}, safe=False)
 
     elif request.method == 'POST':
@@ -128,6 +121,28 @@ def choose_word(request):
 
 
 @csrf_exempt
+def is_word_valid(request):
+    data = JSONParser().parse(request)
+    if request.method == 'POST':
+        words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+        is_valid = data["word"] in words
+        return JsonResponse(data={"status": 200, "data": is_valid}, safe=False)
+
+
+is_socket_running = False
+@csrf_exempt
+def start_websocket(request):
+    global is_socket_running
+    if not is_socket_running:
+        sock = Websocket()
+        t = threading.Thread(target=sock.run, daemon=True)
+        t.start()
+        is_socket_running = True
+        return JsonResponse(data={"message": "Socket started."}, status=200)
+    return JsonResponse(data={"message": "Socket is running."}, status=202)
+
+
+@csrf_exempt
 def normal_game(request):
     obj = False
     if request.method == 'GET':
@@ -137,13 +152,13 @@ def normal_game(request):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
 
+        return JsonResponse(data={}, status=200)
 
-
-        serializer = GameSerializer(data=data, partial=True)
-        if serializer.is_valid():
-            # serializer.save()
-            return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
-        return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
+        # serializer = GameSerializer(data=data, partial=True)
+        # if serializer.is_valid():
+        #     # serializer.save()
+        #     return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
+        # return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
 
     elif request.method == 'DELETE':
         obj = model_object.objects.get(order=data['id'])
@@ -173,3 +188,6 @@ def ranked_game(request):
         obj.delete()
         serializer = GameSerializer(obj)
         return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
+
+
+

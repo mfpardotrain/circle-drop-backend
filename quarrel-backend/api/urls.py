@@ -16,6 +16,9 @@ urlpatterns = [
     # Game URLs
     path('chooseWord/', views.choose_word),
     path('getWords/', views.choose_word),
+    path('isWordValid/', views.is_word_valid),
     path('normalGame/', views.normal_game),
     path('rankedGame/', views.ranked_game),
+
+    path('startWebsocket/', views.start_websocket)
 ]
