@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='game',
             name='solution_time',
-            field=models.DateTimeField(),
+            field=models.PositiveIntegerField(),
         ),
     ]

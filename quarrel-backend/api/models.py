@@ -57,7 +57,7 @@ class Game(models.Model):
     guess4 = models.CharField(max_length=30)
     guess5 = models.CharField(max_length=30)
     guess6 = models.CharField(max_length=30)
-    solution_time = models.DateTimeField(auto_now=False)
+    # solution_time = models.PositiveIntegerField()
     correct_guess = models.PositiveIntegerField()
     primary_elo = models.DecimalField(max_digits=8, decimal_places=2)
     secondary_elo = models.DecimalField(max_digits=8, decimal_places=2)

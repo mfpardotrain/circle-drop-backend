@@ -25,12 +25,11 @@ SECRET_KEY = 'k$zd(9bcyp78+qf&g*-9asdmum@%r4^h7zejz7q-eqw9qc7709'
 DEBUG = False
 
 ALLOWED_HOSTS = ['api.quarrel-game.com',
-                 'http://quarrelbackend-env.eba-523qsmzd.us-east-2.elasticbeanstalk.com',
+                 'quarrelbackend-env.eba-523qsmzd.us-east-2.elasticbeanstalk.com',
                  'localhost',
                  '172.31.7.94']
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ['https://shop.beanstalkmarketplace.com']
 
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -167,8 +166,8 @@ STATIC_URL = '/static/'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'email-smtp.us-east-2.amazonaws.com'
 EMAIL_PORT = '587'
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+# EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+# EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
@@ -176,7 +175,7 @@ EMAIL_USE_SSL = False
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 # LOGGING = {
 #     'version': 1,
