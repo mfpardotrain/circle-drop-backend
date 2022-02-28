@@ -24,10 +24,7 @@ SECRET_KEY = 'k$zd(9bcyp78+qf&g*-9asdmum@%r4^h7zejz7q-eqw9qc7709'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['api.quarrel-game.com',
-                 'quarrelbackend-env.eba-523qsmzd.us-east-2.elasticbeanstalk.com',
-                 'localhost',
-                 '172.31.7.94']
+ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
 

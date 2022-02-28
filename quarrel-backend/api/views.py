@@ -54,23 +54,23 @@ def user_store(request):
         (user, token) = user_auth_tuple
 
     if request.method == 'GET':
-        obj = model_object.objects.get(username=user)
+        obj = Quarreler.objects.get(username=user)
         serializer = UserSerializer(obj)
         return JsonResponse(data={"status": 200, "data": serializer.data}, safe=False)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        obj = model_object.objects.get(username=user)
+        obj = Quarreler.objects.get(username=user)
         serializer = UserSerializer(data=data, instance=obj, partial=True)
 
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(data={'status': 201, 'message': 'Success!'}, status=201)
 
-        return JsonResponse(data={"status": 400, "data": errors}, status=400)
+        return JsonResponse(data={"status": 400, "data": serializer.error_messages}, status=400)
 
     elif request.method == 'DELETE':
-        obj = model_object.objects.get(username=user)
+        obj = Quarreler.objects.get(username=user)
         logger.info(obj)
         obj.delete()
         serializer = UserSerializer(obj)
@@ -93,38 +93,27 @@ class CustomAuthToken(ObtainAuthToken):
 @csrf_exempt
 def ping(request):
     if request.method == 'GET':
-        return JsonResponse(status=200, data={'message': 'pong'})
+        return JsonResponse(status=200, data={'message': "pong"})
 
 
 @csrf_exempt
 def choose_word(request):
     obj = False
     if request.method == 'GET':
-        words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
-        choices = random.choices(words, k=15)
-        # serializer = GameSerializer(words, many=True)
-        return JsonResponse(data={"status": 200, "data": choices}, safe=False)
-
-    elif request.method == 'POST':
-        serializer = GameSerializer(data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
-        return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
-
-    elif request.method == 'DELETE':
-        obj = model_object.objects.get(order=data['id'])
-        logger.info(obj)
-        obj.delete()
-        serializer = GameSerializer(obj)
-        return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
+        try:
+            words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
+            choices = random.choices(words, k=15)
+            # serializer = GameSerializer(words, many=True)
+            return JsonResponse(data={"status": 200, "data": choices}, safe=False)
+        except BaseException as err:
+            return JsonResponse(data={"status": 400, "data": err}, safe=False)
 
 
 @csrf_exempt
 def is_word_valid(request):
     data = JSONParser().parse(request)
     if request.method == 'POST':
-        words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+        words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
         is_valid = data["word"] in words
         return JsonResponse(data={"status": 200, "data": is_valid}, safe=False)
 
@@ -160,13 +149,6 @@ def normal_game(request):
         #     return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
         # return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
 
-    elif request.method == 'DELETE':
-        obj = model_object.objects.get(order=data['id'])
-        logger.info(obj)
-        obj.delete()
-        serializer = GameSerializer(obj)
-        return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
-
 
 @csrf_exempt
 def ranked_game(request):
@@ -175,19 +157,6 @@ def ranked_game(request):
         serializer = GameSerializer(obj, many=True)
         return JsonResponse(data={"status": 200, "data": serializer.data}, safe=False)
 
-    elif request.method == 'POST':
-        serializer = GameSerializer(data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
-        return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
-
-    elif request.method == 'DELETE':
-        obj = model_object.objects.get(order=data['id'])
-        logger.info(obj)
-        obj.delete()
-        serializer = GameSerializer(obj)
-        return JsonResponse(data={"status": 204, "data": serializer.data}, status=204)
 
 
 
