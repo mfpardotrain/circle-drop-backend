@@ -98,11 +98,11 @@ def ping(request):
 
 @csrf_exempt
 def choose_word(request):
-    obj = False
     if request.method == 'GET':
         try:
             words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
-            choices = random.choices(words, k=15)
+            # words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+            choices = random.sample(words, k=15)
             # serializer = GameSerializer(words, many=True)
             return JsonResponse(data={"status": 200, "data": choices}, safe=False)
         except BaseException as err:
@@ -114,6 +114,7 @@ def is_word_valid(request):
     data = JSONParser().parse(request)
     if request.method == 'POST':
         words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
+        # words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
         is_valid = data["word"] in words
         return JsonResponse(data={"status": 200, "data": is_valid}, safe=False)
 
@@ -131,6 +132,13 @@ def start_websocket(request):
     return JsonResponse(data={"message": "Socket is running."}, status=202)
 
 
+def check_guesses(obj, previous_guesses):
+    guess_list = [obj.guess1, obj.guess2, obj.guess3, obj.guess4, obj.guess5, obj.guess6]
+    for inc, saved in zip(previous_guesses, guess_list):
+        if str(inc) != saved:
+            return JsonResponse(status=400, data={"status": 400, "data": {"message": "guess doesnt match"}}, safe=False)
+    return len(previous_guesses) + 1
+
 @csrf_exempt
 def normal_game(request):
     obj = False
@@ -140,14 +148,48 @@ def normal_game(request):
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
+        primary_user = data['guestId']
+        game_id = data['gameId']
+        answer = str(data['answer'])
+        try:
+            cur_game = Game.objects.get(primary_guest=primary_user, game_id=game_id)
+            previous_guesses = data['previousGuesses']
+            guess = data['guessState']
+            if cur_game.answer is None:
+                cur_game.answer = data["answer"]
+            if len(previous_guesses) == 0:
+                cur_game.guess1 = guess
+            else:
+                update_guess = check_guesses(cur_game, previous_guesses)
+                if update_guess == 2:
+                    cur_game.guess2 = guess
+                if update_guess == 3:
+                    cur_game.guess3 = guess
+                if update_guess == 4:
+                    cur_game.guess4 = guess
+                if update_guess == 5:
+                    cur_game.guess5 = guess
+                if update_guess == 6:
+                    cur_game.guess6 = guess
+            if str(guess) == answer:
+                cur_game.correct_guess = len(previous_guesses)
+                cur_game.save()
+                return JsonResponse(data={"status": 200, "data": {"message": "winner"}}, safe=False)
+            cur_game.save()
+            if len(previous_guesses) == 5:
+                return JsonResponse(data={"status": 200, "data": {"message": "loser"}}, safe=False)
+            return JsonResponse(data={"status": 200, "data": {"message": "continue"}}, status=200)
+        except Game.DoesNotExist:
+            Game.objects.create(
+                primary_guest=primary_user,
+                game_id=game_id,
+            )
+            return JsonResponse(data={"status": 200, "data": {"message": "game created"}}, status=200)
+        except KeyError as err:
+            return JsonResponse(data={"status": 400, "data": {"message": "key error"}}, status=400)
 
-        return JsonResponse(data={}, status=200)
 
-        # serializer = GameSerializer(data=data, partial=True)
-        # if serializer.is_valid():
-        #     # serializer.save()
-        #     return JsonResponse(data={"status": 200, "data": serializer.data}, status=201)
-        # return JsonResponse(data={"status": 400, "data": serializer.errors}, status=400)
+
 
 
 @csrf_exempt

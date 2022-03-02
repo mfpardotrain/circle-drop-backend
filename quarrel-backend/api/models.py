@@ -48,30 +48,32 @@ class Quarreler(AbstractBaseUser):
 
 
 class Game(models.Model):
-    primary_user = models.ForeignKey(Quarreler, related_name='primary_user', on_delete=models.CASCADE)
-    secondary_user = models.ForeignKey(Quarreler, related_name='secondary_user', on_delete=models.CASCADE)
-    answer = models.CharField(max_length=30)
-    guess1 = models.CharField(max_length=30)
-    guess2 = models.CharField(max_length=30)
-    guess3 = models.CharField(max_length=30)
-    guess4 = models.CharField(max_length=30)
-    guess5 = models.CharField(max_length=30)
-    guess6 = models.CharField(max_length=30)
+    primary_user = models.ForeignKey(Quarreler, related_name='primary_user', on_delete=models.CASCADE, null=True)
+    secondary_user = models.ForeignKey(Quarreler, related_name='secondary_user', on_delete=models.CASCADE, null=True)
+    answer = models.CharField(max_length=30, null=True)
+    guess1 = models.CharField(max_length=30, null=True)
+    guess2 = models.CharField(max_length=30, null=True)
+    guess3 = models.CharField(max_length=30, null=True)
+    guess4 = models.CharField(max_length=30, null=True)
+    guess5 = models.CharField(max_length=30, null=True)
+    guess6 = models.CharField(max_length=30, null=True)
     # solution_time = models.PositiveIntegerField()
-    correct_guess = models.PositiveIntegerField()
-    primary_elo = models.DecimalField(max_digits=8, decimal_places=2)
-    secondary_elo = models.DecimalField(max_digits=8, decimal_places=2)
-    elo_change = models.DecimalField(max_digits=8, decimal_places=2)
+    correct_guess = models.PositiveIntegerField(null=True)
+    primary_elo = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    secondary_elo = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    elo_change = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     game_id = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     is_ranked = models.BooleanField(default=False)
+    primary_guest = models.CharField(max_length=40)
+    secondary_guest = models.CharField(max_length=40, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     created_by = models.CharField(max_length=50)
     updated_by = models.CharField(max_length=50)
 
-    def __str(self):
-        return str(self.game_id, self.primary_user, self.secondary_user)
+    def __str__(self):
+        return str(self.game_id) + str(self.primary_user) + str(self.secondary_user) + str(self.guess1) + str(self.guess2) + str(self.guess3) + str(self.guess4) + str(self.guess5) + str(self.guess6)
 
 
 @receiver(reset_password_token_created)
