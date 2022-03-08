@@ -96,12 +96,17 @@ def ping(request):
         return JsonResponse(status=200, data={'message': "pong"})
 
 
+def read_words():
+    words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
+    # words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+    return words
+
+
 @csrf_exempt
 def choose_word(request):
     if request.method == 'GET':
         try:
-            words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
-            # words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+            words = read_words()
             choices = random.sample(words, k=15)
             # serializer = GameSerializer(words, many=True)
             return JsonResponse(data={"status": 200, "data": choices}, safe=False)
@@ -113,8 +118,7 @@ def choose_word(request):
 def is_word_valid(request):
     data = JSONParser().parse(request)
     if request.method == 'POST':
-        words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
-        # words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+        words = read_words()
         is_valid = data["word"] in words
         return JsonResponse(data={"status": 200, "data": is_valid}, safe=False)
 
@@ -132,10 +136,25 @@ def start_websocket(request):
     return JsonResponse(data={"message": "Socket is running."}, status=202)
 
 
+@csrf_exempt
+def get_previous_game_data(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        primary_user = data['guestId']
+        game_id = data['gameId']
+        try:
+            cur_game = Game.objects.get(primary_guest=primary_user, game_id=game_id)
+            guess_list = [cur_game.guess1, cur_game.guess2, cur_game.guess3, cur_game.guess4, cur_game.guess5, cur_game.guess6]
+            previous_guesses = [json.loads(guess) for guess in guess_list if guess is not None]
+            return JsonResponse(data=previous_guesses, safe=False)
+        except:
+            return JsonResponse(status=400, data=[], safe=False)
+
+
 def check_guesses(obj, previous_guesses):
     guess_list = [obj.guess1, obj.guess2, obj.guess3, obj.guess4, obj.guess5, obj.guess6]
     for inc, saved in zip(previous_guesses, guess_list):
-        if str(inc) != saved:
+        if inc != json.loads(saved):
             return JsonResponse(status=400, data={"status": 400, "data": {"message": "guess doesnt match"}}, safe=False)
     return len(previous_guesses) + 1
 
@@ -150,14 +169,14 @@ def normal_game(request):
         data = JSONParser().parse(request)
         primary_user = data['guestId']
         game_id = data['gameId']
-        answer = str(data['answer'])
+        answer = data['answer']
         try:
             cur_game = Game.objects.get(primary_guest=primary_user, game_id=game_id)
-            previous_guesses = data['previousGuesses']
-            guess = data['guessState']
+            previous_guesses = data.get('previousGuesses')
+            guess = json.dumps(data.get('guessState'))
             if cur_game.answer is None:
                 cur_game.answer = data["answer"]
-            if len(previous_guesses) == 0:
+            if cur_game.guess1 is None or json.loads(cur_game.guess1) is None:
                 cur_game.guess1 = guess
             else:
                 update_guess = check_guesses(cur_game, previous_guesses)
@@ -171,7 +190,7 @@ def normal_game(request):
                     cur_game.guess5 = guess
                 if update_guess == 6:
                     cur_game.guess6 = guess
-            if str(guess) == answer:
+            if json.loads(guess) == answer:
                 cur_game.correct_guess = len(previous_guesses)
                 cur_game.save()
                 return JsonResponse(data={"status": 200, "data": {"message": "winner"}}, safe=False)
@@ -186,7 +205,7 @@ def normal_game(request):
             )
             return JsonResponse(data={"status": 200, "data": {"message": "game created"}}, status=200)
         except KeyError as err:
-            return JsonResponse(data={"status": 400, "data": {"message": "key error"}}, status=400)
+            return JsonResponse(data={"status": 400, "data": err}, status=400)
 
 
 

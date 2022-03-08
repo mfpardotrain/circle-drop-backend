@@ -18,11 +18,12 @@ class Websocket:
 
     async def user_connect(self, websocket, user_data):
         guest_id = user_data["guestId"]
-        self.users[guest_id] = user_data
-        self.sockets[guest_id] = websocket
+        if ~(guest_id in self.users.keys()):
+            self.users[guest_id] = user_data
+            self.sockets[guest_id] = websocket
 
     async def get_gamestate(self, game_id, user_id):
-        if len(self.users) > 0:
+        if len(self.users) > 0 and game_id is not None:
             user_copy = self.users.copy()
             test = False
             for i in filter(lambda elem: elem["gameId"] == game_id and elem["guestId"] != user_id
@@ -34,7 +35,7 @@ class Websocket:
     async def get_user_data(self, websocket, guest_id):
         if len(self.users) > 0 and guest_id in self.users.keys():
             user_data = self.users[guest_id]
-            game_state = await self.get_gamestate(user_data["gameId"], guest_id)
+            game_state = await self.get_gamestate(user_data.get("gameId"), guest_id)
             if game_state is not None:
                 message = build_payload(guest_id, game_state["answer"], user_data["gameId"])
                 await websocket.send(json.dumps(message))
@@ -82,10 +83,7 @@ class Websocket:
             if method == "get_user_data":
                 await self.get_user_data(websocket, decoded["guestId"])
             if method == "get_gamestate":
-                gamestate = await self.get_user_data(websocket, decoded["guestId"])
-                if gamestate is not None:
-                    gamestate["guestId"] = decoded["guestId"]
-                    await websocket.send(json.dumps(gamestate))
+                await self.get_user_data(websocket, decoded["guestId"])
 
     async def main(self):
         uri = websockets.parse_uri(f"ws://0.0.0.0:8765/")
