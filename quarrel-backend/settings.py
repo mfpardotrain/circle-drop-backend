@@ -24,9 +24,26 @@ SECRET_KEY = 'k$zd(9bcyp78+qf&g*-9asdmum@%r4^h7zejz7q-eqw9qc7709'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['quarrelbackend-env-2.eba-523qsmzd.us-east-2.elasticbeanstalk.com',
+                 'ec2-3-135-157-13.us-east-2.compute.amazonaws.com',
+                 'quarrel-backend-337644545.us-east-2.elb.amazonaws.com',
+                 'Quarrelbackend-env-3.eba-523qsmzd.us-east-2.elasticbeanstalk.com',
+                 'ec2-18-188-68-144.us-east-2.compute.amazonaws.com',
+                 'awseb-AWSEB-11WMYTU1NMCEQ-1206691633.us-east-2.elb.amazonaws.com',
+                 'api.playquarrel.com',
+                 'https://api.playquarrel.com',
+                 'localhost',
+                 '3.135.157.13',
+                 '18.188.68.144'
+                 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+# CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = ('https://www.playquarrel.com', 'https://playquarrel.com')
+CORS_ALLOWED_ORIGINS = [
+    'https://www.playquarrel.com',
+    'https://playquarrel.com'
+]
 
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -172,7 +189,8 @@ EMAIL_USE_SSL = False
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
 
 # LOGGING = {
 #     'version': 1,
