@@ -6,23 +6,24 @@
       ports:
         - "4321:5432"
       environment:
-        POSTGRES_PASSWORD: radtad4201969
+        POSTGRES_PASSWORD: Y!tmbc!l0l
         POSTGRES_DB: quarrel
     web:
       build: .
-      command: bash -c "python /code/quarrel-backend/manage.py makemigrations && python /code/quarrel-backend/manage.py migrate && python /code/quarrel-backend/manage.py runserver 0.0.0.0:8000"
+      command: bash -c "python /code/quarrel-backend/manage.py runserver 0.0.0.0:8000"
       container_name: code
       volumes:
         - .:/code
       ports:
         - "8000:8000"
+        - "8765:8765"
       depends_on:
         - "db"
       environment:
-        QUARREL_DATABASE_HOST: db
+        QUARREL_DATABASE_HOST: soil-uat.cx8emvfn770a.us-east-2.rds.amazonaws.com
         QUARREL_DATABASE_PORT: 5432
         QUARREL_DATABASE_NAME: quarrel
         QUARREL_DATABASE_ADMIN: postgres
-        QUARREL_DATABASE_PASSWORD: radtad4201969
+        QUARREL_DATABASE_PASSWORD: Y!tmbc!l0l
         AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
         AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}

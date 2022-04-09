@@ -129,3 +129,5 @@ quarrel-backend.zip
 
 .ebextensions/*
 django_log.log
+**/__pycache__
+*.pyc
