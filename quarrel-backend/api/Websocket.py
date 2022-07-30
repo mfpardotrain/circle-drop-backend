@@ -90,8 +90,8 @@ class Websocket:
                 await websocket.send(json.dumps({"allGames": True, "data": self.users}))
 
     async def main(self):
-        # uri = websockets.parse_uri(f"ws://0.0.0.0:8765/")
-        uri = websockets.parse_uri(f"ws://localhost:8765/")
+        uri = websockets.parse_uri(f"ws://0.0.0.0:8765/")
+        # uri = websockets.parse_uri(f"ws://localhost:8765/")
         async with websockets.serve(ws_handler=self.echo, host=uri.host, port=uri.port):
             self.fut = asyncio.Future()
             await self.fut
