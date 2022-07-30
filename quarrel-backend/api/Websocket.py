@@ -62,10 +62,11 @@ class Websocket:
         # del self.sockets[secondary_user_id]
 
     async def close_conns(self, websocket, decoded):
-        gamestate = await self.get_gamestate(decoded["gameId"], decoded["guestId"])
-        del self.users[decoded["guestId"]]
-        del self.users[gamestate["guestId"]]
-        await websocket.close()
+        for guestId in list(self.users):
+            print(self.users[guestId])
+            if self.users[guestId]["gameId"] == decoded["gameId"]:
+                del self.users[guestId]
+
         # await self.sockets[gamestate["guestId"]].close()
         # del self.sockets[gamestate["guestId"]]
         # del self.sockets[decoded["guestId"]]
@@ -79,15 +80,18 @@ class Websocket:
             if method == "player_2_connect":
                 await self.player_2_connect(websocket, decoded)
             if method == "kill":
-                result = await self.close_conns(websocket, decoded)
+                await self.close_conns(websocket, decoded)
+                await websocket.send(json.dumps({"allGames": True, "data": self.users}))
             if method == "get_user_data":
                 await self.get_user_data(websocket, decoded["guestId"])
             if method == "get_gamestate":
                 await self.get_user_data(websocket, decoded["guestId"])
+            if method == "get_all_games":
+                await websocket.send(json.dumps({"allGames": True, "data": self.users}))
 
     async def main(self):
-        uri = websockets.parse_uri(f"ws://0.0.0.0:8765/")
-        # uri = websockets.parse_uri(f"ws://localhost:8765/")
+        # uri = websockets.parse_uri(f"ws://0.0.0.0:8765/")
+        uri = websockets.parse_uri(f"ws://localhost:8765/")
         async with websockets.serve(ws_handler=self.echo, host=uri.host, port=uri.port):
             self.fut = asyncio.Future()
             await self.fut

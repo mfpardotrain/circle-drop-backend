@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'k$zd(9bcyp78+qf&g*-9asdmum@%r4^h7zejz7q-eqw9qc7709'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['quarrelbackend-env-2.eba-523qsmzd.us-east-2.elasticbeanstalk.com',
                  'ec2-3-135-157-13.us-east-2.compute.amazonaws.com',
@@ -37,13 +37,13 @@ ALLOWED_HOSTS = ['quarrelbackend-env-2.eba-523qsmzd.us-east-2.elasticbeanstalk.c
                  '18.188.68.144'
                  ]
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = ('https://www.playquarrel.com', 'https://playquarrel.com')
-CORS_ALLOWED_ORIGINS = [
-    'https://www.playquarrel.com',
-    'https://playquarrel.com'
-]
+# CORS_ORIGIN_WHITELIST = ('https://www.playquarrel.com', 'https://playquarrel.com')
+# CORS_ALLOWED_ORIGINS = [
+#     'https://www.playquarrel.com',
+#     'https://playquarrel.com'
+# ]
 
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -189,7 +189,7 @@ EMAIL_USE_SSL = False
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 # SECURE_SSL_REDIRECT = True
 
 # LOGGING = {

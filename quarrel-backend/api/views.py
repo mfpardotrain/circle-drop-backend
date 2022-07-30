@@ -97,8 +97,8 @@ def ping(request):
 
 
 def read_words():
-    words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
-    # words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
+    # words = json.load(open(os.path.join(os.getcwd(), "quarrel-backend/api/dictionary.json")))
+    words = json.load(open(os.path.join(os.getcwd(), 'api\\dictionary.json')))
     return words
 
 
@@ -198,14 +198,14 @@ def normal_game(request):
             if len(previous_guesses) == 5:
                 return JsonResponse(data={"status": 200, "data": {"message": "loser"}}, safe=False)
             return JsonResponse(data={"status": 200, "data": {"message": "continue"}}, status=200)
-        except Game.DoesNotExist:
+        except:
             Game.objects.create(
                 primary_guest=primary_user,
                 game_id=game_id,
             )
             return JsonResponse(data={"status": 200, "data": {"message": "game created"}}, status=200)
-        except KeyError as err:
-            return JsonResponse(data={"status": 400, "data": err}, status=400)
+
+
 
 
 
