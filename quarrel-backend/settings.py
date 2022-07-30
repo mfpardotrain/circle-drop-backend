@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'k$zd(9bcyp78+qf&g*-9asdmum@%r4^h7zejz7q-eqw9qc7709'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['quarrelbackend-env-2.eba-523qsmzd.us-east-2.elasticbeanstalk.com',
                  'ec2-3-135-157-13.us-east-2.compute.amazonaws.com',
