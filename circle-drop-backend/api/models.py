@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
 
 
 # This model represents the user.
-class Quarreler(AbstractBaseUser):
+class Dragracer(AbstractBaseUser):
     email = models.EmailField(max_length=50, unique=True)
     username = models.CharField(max_length=30, unique=True)
     EMAIL_FIELD = 'email'
@@ -48,8 +48,8 @@ class Quarreler(AbstractBaseUser):
 
 
 class Game(models.Model):
-    primary_user = models.ForeignKey(Quarreler, related_name='primary_user', on_delete=models.CASCADE, null=True)
-    secondary_user = models.ForeignKey(Quarreler, related_name='secondary_user', on_delete=models.CASCADE, null=True)
+    primary_user = models.ForeignKey(Dragracer, related_name='primary_user', on_delete=models.CASCADE, null=True)
+    secondary_user = models.ForeignKey(Dragracer, related_name='secondary_user', on_delete=models.CASCADE, null=True)
     answer = models.CharField(max_length=30, null=True)
     guess1 = models.CharField(max_length=30, null=True)
     guess2 = models.CharField(max_length=30, null=True)
@@ -78,7 +78,7 @@ class Game(models.Model):
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-    frontend_url = os.environ['QUARREL_FRONTEND_URL']
+    frontend_url = os.environ['DRAGRACE_FRONTEND_URL']
     # frontend_url = "a"
     message = "Hello, please click the link below to reset your password: "
     email_plaintext_message = message + frontend_url + "{}?token={}".format(
@@ -86,11 +86,11 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
     send_mail(
         # title:
-        "Password Reset for {title}".format(title="Quarrel"),
+        "Password Reset for {title}".format(title="Dragrace"),
         # message:
         email_plaintext_message,
         # from:
-        "quarrelgame@gmail.com",
+        "dragracegame@gmail.com",
         # to:
         [reset_password_token.user.email]
     )

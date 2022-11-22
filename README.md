@@ -1,6 +1,6 @@
 
 
-# Quarrel!
+# DRAGRACE!
 
 ## Getting Started
 
@@ -10,7 +10,7 @@ Before getting started, ensure you have python3 installed on your workstation. I
 `pip install -r requirements.txt`
 
 #### **Ensure Database is Running**
-A database should be up and running before trying to start up QUARREL. The project is currently configured to use a postgres database.
+A database should be up and running before trying to start up DRAGRACE. The project is currently configured to use a postgres database.
 
 #### **Running set_environment.sh**
 Run the following command:
@@ -18,11 +18,11 @@ Run the following command:
 
 This script will set the following environmental variables.
 ```
-   QUARREL_DATABASE_HOST     - Default localhost
-   QUARREL_DATABASE_PORT     - Default 5432
-   QUARREL_DATABASE_NAME     - Default quarrel
-   QUARREL_DATABASE_ADMIN    - Default postgres
-   QUARREL_DATABSE_PASSWORD  - Required
+   DRAGRACE_DATABASE_HOST     - Default localhost
+   DRAGRACE_DATABASE_PORT     - Default 5432
+   DRAGRACE_DATABASE_NAME     - Default DRAGRACE
+   DRAGRACE_DATABASE_ADMIN    - Default postgres
+   DRAGRACE_DATABSE_PASSWORD  - Required
    EMAIL_HOST_USER         - Required
    EMAIL_HOST_PASSWORD     - Required
    BEANSTALK_FRONTEND_URL  - Default http://localhost:3000
@@ -35,14 +35,14 @@ If you prefer to constantly be working with the same database and AWS credential
 
 If this is this is a brand new database, run the following commands to populate the database with tables based on Djongo's `models.py` file.
 ```
-cd quarrel-backend
+cd dragrace-backend
 pyhton manage.py migrate
 ```
 
-#### Start the QUARREL Application
+#### Start the dragrace Application
 Once the database parameters are set simply run the following commands to start the application:
 ```
-cd quarrel-backend
+cd dragrace-backend
 python manage.py runserver
 ```
 

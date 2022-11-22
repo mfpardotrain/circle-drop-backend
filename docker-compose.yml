@@ -7,10 +7,10 @@
         - "4321:5432"
       environment:
         POSTGRES_PASSWORD: Y!tmbc!l0l
-        POSTGRES_DB: quarrel
+        POSTGRES_DB: dragrace
     web:
       build: .
-      command: bash -c "python /code/quarrel-backend/manage.py runserver 0.0.0.0:8000"
+      command: bash -c "python /code/circle-drop-backend/manage.py runserver 0.0.0.0:8000"
       container_name: code
       volumes:
         - .:/code
@@ -20,10 +20,10 @@
       depends_on:
         - "db"
       environment:
-        QUARREL_DATABASE_HOST: soil-uat.cx8emvfn770a.us-east-2.rds.amazonaws.com
-        QUARREL_DATABASE_PORT: 5432
-        QUARREL_DATABASE_NAME: quarrel
-        QUARREL_DATABASE_ADMIN: postgres
-        QUARREL_DATABASE_PASSWORD: Y!tmbc!l0l
+        DRAGRACE_DATABASE_HOST: soil-uat.cx8emvfn770a.us-east-2.rds.amazonaws.com
+        DRAGRACE_DATABASE_PORT: 5432
+        DRAGRACE_DATABASE_NAME: dragrace
+        DRAGRACE_DATABASE_ADMIN: postgres
+        DRAGRACE_DATABASE_PASSWORD: Y!tmbc!l0l
         AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
         AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}

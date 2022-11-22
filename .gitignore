@@ -125,7 +125,7 @@ dmypy.json
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-quarrel-backend.zip
+circle-drop-backend.zip
 
 .ebextensions/*
 django_log.log

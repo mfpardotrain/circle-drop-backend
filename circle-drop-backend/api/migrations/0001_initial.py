@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Quarreler',
+            name='Dragracer',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
@@ -59,8 +59,8 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('created_by', models.CharField(max_length=50)),
                 ('updated_by', models.CharField(max_length=50)),
-                ('primary_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='primary_user', to='api.Quarreler')),
-                ('secondary_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='secondary_user', to='api.Quarreler')),
+                ('primary_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='primary_user', to='api.Dragracer')),
+                ('secondary_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='secondary_user', to='api.Dragracer')),
             ],
         ),
     ]

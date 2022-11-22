@@ -1,5 +1,5 @@
 """
-WSGI config for quarrel project.
+WSGI config for dragrace project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

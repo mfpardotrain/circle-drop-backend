@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class QuarrelConfig(AppConfig):
+class DragraceConfig(AppConfig):
     name = 'api'

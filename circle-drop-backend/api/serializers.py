@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Quarreler, Game
+from .models import Dragracer, Game
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Quarreler
+        model = Dragracer
         fields = '__all__'
         extra_kwargs = {'password': {'write_only': True}}
         depth = 1
